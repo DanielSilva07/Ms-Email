@@ -199,20 +199,6 @@ Link do Projeto: [https://github.com/seu-usuario/ms-email](https://github.com/se
 
 2. O serviço irá processar a mensagem e enviar um e-mail para o cliente com o cálculo do IMC.
 
-## Logs
-
-O serviço gera logs detalhados para facilitar a depuração, incluindo:
-- Recebimento de mensagens
-- Processamento do JSON
-- Erros de validação
-- Confirmação de envio de e-mail
-
-## Tratamento de Erros
-
-- Mensagens inválidas são registradas em log e ignoradas
-- Erros no envio de e-mail são registrados para posterior análise
-- O serviço continua processando novas mensagens mesmo em caso de falha
-
 ## Melhorias Futuras
 
 - Implementar DLQ (Dead Letter Queue) para mensagens com falha
