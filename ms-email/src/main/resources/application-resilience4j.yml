@@ -1,0 +1,28 @@
+resilience4j:
+  retry:
+    configs:
+      default:
+        maxAttempts: 5
+        waitDuration: 1000
+        enableExponentialBackoff: true
+        exponentialBackoffMultiplier: 2
+    instances:
+      emailService:
+        baseConfig: default
+        waitDuration: 1000
+        maxAttempts: 3
+
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+    retry:
+      enabled: true
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus,retry-events,circuitbreakerevents

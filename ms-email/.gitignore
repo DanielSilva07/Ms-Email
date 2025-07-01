@@ -1,0 +1,97 @@
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### Environment ###
+env
+
+
+### Maven ###
+.mvn
+mvnw
+mvnw.cmd
+
+### Logs ###
+logs/
+*.log
+
+### Docker ###
+**/target/jib-cache/
+**/target/jib-image.manifest
+**/target/docker/
+
+### IDE ###
+.idea/
+*.iml
+*.ipr
+*.iws
+.project
+.settings/
+.classpath
+.factorypath
+
+### OS generated files ###
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+### Application ###
+application-*.properties
+!application-example.properties
+
+### Docker Compose ###
+docker-compose.override.yml
+
+### Build ###
+**/target/
+!**/target/generated-sources/
+!**/target/maven-status/
+
+### Test Reports ###
+**/surefire-reports/
+**/failsafe-reports/
+**/test-results/
+**/test-output/
+**/test-reports/
+**/reports/
+
+### Temp Files ###
+*.tmp
+*.bak
+*.swp
+*~
+.~lock.*

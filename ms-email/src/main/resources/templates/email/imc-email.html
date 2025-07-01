@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seu IMC - Acompanhamento de Saúde</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #4a6fa5, #3a5a80);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 22px;
+        }
+        .header p {
+            margin: 5px 0 0;
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .imc-value {
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
+            margin: 25px 0;
+            padding: 20px;
+            background: #f0f7ff;
+            border-radius: 10px;
+            border-left: 5px solid #4a6fa5;
+        }
+        .status-list {
+            margin: 25px 0;
+            padding: 0;
+        }
+        .status-item {
+            margin: 12px 0;
+            padding: 12px 15px;
+            border-radius: 8px;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+        }
+        .status-item i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        .warning {
+            color: #f39c12;
+            border-left: 3px solid #f39c12;
+        }
+        .success {
+            color: #27ae60;
+            border-left: 3px solid #27ae60;
+        }
+        .danger {
+            color: #e74c3c;
+            border-left: 3px solid #e74c3c;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 13px;
+            border-top: 1px solid #eee;
+            background: #f9f9f9;
+        }
+        .footer p {
+            margin: 5px 0;
+            color: #666;
+        }
+        .footer .divider {
+            height: 1px;
+            background: #eee;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Olá, <span th:text="${cliente.nome}">Cliente</span>!</h1>
+            <p>Seu resultado de IMC está pronto</p>
+        </div>
+        
+        <div class="content">
+            <div class="imc-value" th:if="${cliente.imc != null}">
+                Seu IMC: <span th:text="${#numbers.formatDecimal(cliente.imc, 1, 2)}">0.0</span>
+            </div>
+            
+            <p>Sua classificação de acordo com a OMS:</p>
+            <ul class="status-list">
+                <li class="status-item warning" th:classappend="${cliente.imc >= 18.5} ? 'status-item' : 'status-item active'"
+                    th:if="${cliente.imc < 18.5}">
+                    <i>⚠️</i> Abaixo do peso (IMC menor que 18,5)
+                </li>
+                <li class="status-item success" th:classappend="${cliente.imc < 18.5 || cliente.imc >= 25} ? 'status-item' : 'status-item active'"
+                    th:if="${cliente.imc >= 18.5 && cliente.imc < 25}">
+                    <i>✓</i> Peso normal (IMC entre 18,5 e 24,9)
+                </li>
+                <li class="status-item warning" th:classappend="${cliente.imc < 25 || cliente.imc >= 30} ? 'status-item' : 'status-item active'"
+                    th:if="${cliente.imc >= 25 && cliente.imc < 30}">
+                    <i>⚠️</i> Sobrepeso (IMC entre 25 e 29,9)
+                </li>
+                <li class="status-item danger" th:classappend="${cliente.imc < 30} ? 'status-item' : 'status-item active'"
+                    th:if="${cliente.imc >= 30}">
+                    <i>❗</i> Obesidade (IMC 30 ou maior)
+                </li>
+            </ul>
+            
+            <p style="color: #666; font-style: italic;">
+                Lembre-se que o IMC é apenas um indicador. Para uma avaliação completa da sua saúde, consulte um profissional.
+            </p>
+        </div>
+
+        <div class="footer" style="text-align: center; padding: 20px 0; margin-top: 30px; border-top: 1px solid #eaeaea;">
+            <div style="margin-bottom: 15px;">
+                <img src="cid:Daniel_s_logo_2_.ico" alt="Logo" style="width: 60px; height: auto; opacity: 0.8; transition: opacity 0.3s ease;">
+            </div>
+            <p style="color: #666; font-size: 14px; margin: 5px 0;">Daniel Silva Code Lab</p>
+            <div class="divider"></div>
+            <p>Esta é uma mensagem automática, por favor não responda este e-mail.</p>
+            <p>© 2025 Daniel Silva Code Lab. Todos os direitos reservados.</p>
+        </div>
+    </div>
+</body>
+</html>
