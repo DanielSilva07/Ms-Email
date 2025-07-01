@@ -43,44 +43,8 @@ Microsserviço responsável pelo processamento assíncrono de mensagens Kafka e 
 
 ## 📁 Estrutura do Projeto
 
-```
-ms-email/
-├── src/
-│   ├── main/
-│   │   ├── java/br/com/danielsilva/ms_email/
-│   │   │   ├── MsEmailApplication.java       # Aplicação principal
-│   │   │   ├── config/                       # Configurações
-│   │   │   │   ├── KafkaConfig.java          # Configuração do Kafka
-│   │   │   │   ├── MonitoringConfig.java     # Configuração de métricas
-│   │   │   │   ├── OpenApiConfig.java        # Documentação da API
-│   │   │   │   ├── ResilienceConfig.java     # Configuração de resiliência
-│   │   │   │   └── ThymeleafConfig.java      # Configuração de templates
-│   │   │   ├── controller/                   # Controladores REST
-│   │   │   │   └── MetricsController.java    # Endpoints de métricas
-│   │   │   ├── domain/                       # Modelos de domínio
-│   │   │   │   ├── Cliente.java              # Entidade Cliente
-│   │   │   │   └── EmailRetry.java           # Estratégias de retentativa
-│   │   │   ├── dto/                          # Objetos de Transferência de Dados
-│   │   │   ├── exceptions/                   # Tratamento de erros
-│   │   │   │   ├── EmailException.java
-│   │   │   │   └── GlobalExceptionHandler.java
-│   │   │   ├── listener/kafka/               # Consumidores Kafka
-│   │   │   │   ├── KafkaConsumer.java
-│   │   │   │   └── KafkaErrorHandler.java
-│   │   │   └── service/                      # Lógica de negócios
-│   │   │       ├── EmailService.java         # Serviço de e-mail
-│   │   │       ├── MetricsService.java       # Métricas personalizadas
-│   │   │       └── EmailRetryService.java    # Lógica de retentativas
-│   │   └── resources/                        # Recursos da aplicação
-│   │       ├── application.yml               # Configurações
-│   │       └── templates/                    # Templates de e-mail
-│   └── test/                                 # Testes automatizados
-└── docker/                                   # Configurações Docker
-    ├── prometheus/
-    │   └── prometheus.yml                   # Configuração do Prometheus
-    └── grafana/
-        └── dashboards/                      # Dashboards do Grafana
-```
+![Mermaid Chart - Create complex, visual diagrams with text  A smarter way of creating diagrams -2025-07-01-154549](https://github.com/user-attachments/assets/fc207e36-0aa4-4c37-bfd9-546268bbdb54)
+
 
 ## 🚀 Começando
 
