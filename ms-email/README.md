@@ -155,34 +155,7 @@ O serviço está configurado para consumir mensagens do tópico `imc` por padrã
    - **Grafana**: http://localhost:3000 (usuário: admin, senha: admin)
    - **MailHog**: http://localhost:8025 (para visualizar e-mails em desenvolvimento)
 
-### Produção
 
-1. **Construir a imagem Docker**
-   ```bash
-   docker build -t ms-email:latest .
-   ```
-
-2. **Executar o contêiner**
-   ```bash
-   docker run -d --name ms-email \
-     -p 8080:8080 \
-     --env-file .env \
-     ms-email:latest
-   ```
-
-### Testando
-
-1. **Enviar mensagem de teste**
-   ```bash
-   # Usando kcat (antigo kafkacat)
-   echo '{"id":1,"nome":"Usuário Teste","email":"teste@example.com","peso":70.5,"altura":1.75}' | \
-   kcat -b localhost:9092 -t imc -P
-   ```
-
-2. **Verificar logs**
-   ```bash
-   docker-compose logs -f ms-email
-   ```
 
 ## 📊 Monitoramento
 
@@ -221,7 +194,6 @@ O serviço implementa padrões de resiliência usando Resilience4j para garantir
 ### Circuit Breaker
 
 - Abre o circuito após falhas consecutivas
-- Permite uma taxa de chamadas lentas antes de abrir
 - Estado atual exposto nas métricas
 
 ```yaml
@@ -253,19 +225,6 @@ resilience4j.retry:
       exponentialBackoffMultiplier: 2
 ```
 
-### Bulkhead
-
-- Limita chamadas concorrentes
-- Previne sobrecarga do sistema
-- Configuração separada para thread pool
-
-```yaml
-resilience4j.bulkhead:
-  configs:
-    default:
-      maxConcurrentCalls: 25
-      maxWaitDuration: 0
-```
 
 ## 📨 Formato da Mensagem
 
@@ -304,18 +263,6 @@ O serviço consome mensagens no formato JSON do tópico Kafka configurado. O for
 - **`service/`**: Lógica de negócios
 - **`resources/`**: Arquivos de configuração e templates
 
-### Testes
-
-```bash
-# Executar todos os testes
-mvn test
-
-# Executar testes de integração
-mvn test -Pintegration-test
-
-# Gerar relatório de cobertura
-mvn jacoco:report
-```
 
 ## 📄 Licença
 
