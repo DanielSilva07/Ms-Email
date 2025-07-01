@@ -1,0 +1,16 @@
+CREATE TABLE IF NOT EXISTS email_retries (
+    id BIGSERIAL PRIMARY KEY,
+    to_email VARCHAR(255) NOT NULL,
+    subject TEXT,
+    content TEXT,
+    retry_count INTEGER NOT NULL DEFAULT 0,
+    max_retries INTEGER NOT NULL DEFAULT 3,
+    next_retry_at TIMESTAMP,
+    created_at TIMESTAMP NOT NULL,
+    last_attempt_at TIMESTAMP,
+    last_error TEXT,
+    processed BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+CREATE INDEX IF NOT EXISTS idx_email_retries_processed ON email_retries(processed);
+CREATE INDEX IF NOT EXISTS idx_email_retries_next_retry ON email_retries(next_retry_at);
