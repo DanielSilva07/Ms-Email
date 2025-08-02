@@ -15,7 +15,6 @@ Microsserviço responsável pelo processamento assíncrono de mensagens Kafka e 
   - Suporte a anexos e formatação rica
 
 - **Resiliência**
-  - Circuit Breaker com Resilience4j
   - Retry com backoff exponencial
   - Timeout configurável
   - Fallbacks para falhas
@@ -83,21 +82,6 @@ A aplicação expõe métricas detalhadas através do Spring Boot Actuator e Pro
 | `GET /actuator/info`         | Informações da aplicação                       |
 | `GET /api/metrics/health`    | Health check personalizado                     |
 
-### Métricas Personalizadas
-
-| Métrica                          | Tipo      | Descrição                                   |
-|----------------------------------|-----------|--------------------------------------------|
-| `email_sent_total`               | Counter   | Total de e-mails enviados com sucesso      |
-| `email_errors_total`             | Counter   | Total de falhas no envio de e-mails        |
-| `email_processing_duration`      | Timer     | Tempo de processamento de e-mails          |
-| `kafka_consumer_records_consumed`| Counter   | Mensagens consumidas do Kafka              |
-| `kafka_consumer_errors`          | Counter   | Erros no consumidor Kafka                  |
-| `retry_attempts`                 | Counter   | Tentativas de retentativa de envio         |
-| `circuit_breaker_state`          | Gauge     | Estado atual do circuit breaker            |
-
-### Grafana
-
-Um dashboard de exemplo está disponível em `docker/grafana/dashboards/email-dashboard.json` que pode ser importado para visualizar as métricas de forma gráfica.
 
 ## 🔄 Resiliência
 
@@ -152,16 +136,6 @@ O serviço consome mensagens no formato JSON do tópico Kafka configurado. O for
 }
 ```
 
-### Campos Obrigatórios
-
-| Campo  | Tipo    | Descrição                     |
-|--------|---------|--------------------------------|
-| id     | Long    | Identificador único do cliente |
-| nome   | String  | Nome completo do cliente       |
-| email  | String  | E-mail válido do cliente       |
-| peso   | Double  | Peso em quilogramas           |
-| altura | Double  | Altura em metros              |
-
 ## 🛠️ Desenvolvimento
 
 ### Estrutura de Código
@@ -179,23 +153,6 @@ O serviço consome mensagens no formato JSON do tópico Kafka configurado. O for
 ## 📄 Licença
 
 Este projeto está licenciado sob a licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
-
-## 🤝 Contribuição
-
-1. Faça um Fork do projeto
-2. Crie uma Branch para sua Feature (`git checkout -b feature/AmazingFeature`)
-3. Adicione suas mudanças (`git add .`)
-4. Comite suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-5. Faça o Push da Branch (`git push origin feature/AmazingFeature`)
-6. Abra um Pull Request
-
-## 📧 Contato
-
-Daniel Silva - [@seuemail@example.com](mailto:seuemail@example.com)
-
-Link do Projeto: [https://github.com/seu-usuario/ms-email](https://github.com/seu-usuario/ms-email)
-   
-   Cole o JSON com os dados do cliente.
 
 2. O serviço irá processar a mensagem e enviar um e-mail para o cliente com o cálculo do IMC.
 
