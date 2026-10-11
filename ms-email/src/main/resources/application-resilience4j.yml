@@ -11,18 +11,3 @@ resilience4j:
         baseConfig: default
         waitDuration: 1000
         maxAttempts: 3
-
-management:
-  health:
-    circuitbreakers:
-      enabled: true
-    retry:
-      enabled: true
-  endpoint:
-    health:
-      show-details: always
-      show-components: always
-  endpoints:
-    web:
-      exposure:
-        include: health,metrics,prometheus,retry-events,circuitbreakerevents

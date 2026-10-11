@@ -1,53 +1,93 @@
 spring:
-    application:
-        name: ms-email
+  application:
+    name: ms-email
 
-    kafka:
-        bootstrap-servers: localhost:9092
-        consumer:
-          key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-          value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-          group-id: email-service-group
-          auto-offset-reset: earliest
-          properties:
-            security:
-              protocol: PLAINTEXT
+  kafka:
+    bootstrap-servers: kafka:9092
+    listener:
+      missing-topics-fatal: false
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: email-service-group
+      auto-offset-reset: earliest
+      allow-auto-create-topics: true
+      properties:
+        security:
+          protocol: PLAINTEXT
 
-    datasource:
-      url: ${SPRING_DATASOURCE_URL}
-      username: ${DATABASE_USERNAME}
-      password: ${DATABASE_PASSWORD}
-      driver-class-name: org.postgresql.Driver
-      hikari:
-        minimum-idle: 25
-        maximum-pool-size: 50
-        connection-timeout: 10000
-        idle-timeout: 600000
-        max-lifetime: 1800000
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      minimum-idle: 25
+      maximum-pool-size: 50
+      connection-timeout: 10000
+      idle-timeout: 600000
+      max-lifetime: 1800000
 
-      # Configuração do JPA/Hibernate
-      jpa:
-        hibernate:
-          defer-datasource-initialization: true
-          ddl-auto: update
-        show-sql: false
-        properties:
-          hibernate:
-            format_sql: true
-            dialect: org.hibernate.dialect.PostgreSQLDialect
-            jdbc:
-              lob:
-                non_contextual_creation: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+    defer-datasource-initialization: true
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          lob:
+            non_contextual_creation: true
 
-              sql:
-                init:
-                  mode: always
-                  platform: postgresql
-                  schema-locations: classpath:schema.sql
-                  separator:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL_USER}
+    password: ${EMAIL_PASSWORD}
+    protocol: smtp
+    test-connection: false
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
 
+  thymeleaf:
+    cache: false
+    mode: HTML
+    encoding: UTF-8
+    check-template-location: true
+    prefix: classpath:/templates/email/
+    suffix: .html
+
+server:
+  port: 8082
+
+ms:
+  api:
     email:
-      host: ${EMAIL_HOST}
-      port: ${EMAIL_PORT}
-      username: ${EMAIL_USER}
-      password: ${EMAIL_PASSWORD}
+      url: http://localhost:8082/api/email
+
+logging:
+  pattern:
+    console: "%green(%d{HH:mm:ss:SSS}) %blue(%5level) %red([%thread]) %yellow(%logger{15})- %msg%n"
+  level:
+    org.springframework.retry: DEBUG
+    io.github.resilience4j: DEBUG
+
+
+resilience4j:
+  retry:
+    instances:
+      emailService:
+        maxAttempts: 10
+        waitDuration: 6s
+        enableExponentialBackoff: true
+        exponentialBackoffMultiplier: 2

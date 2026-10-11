@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -42,8 +41,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         body.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
         body.put("error", "Erro interno no servidor");
         body.put("message", "Ocorreu um erro inesperado. Por favor, tente novamente mais tarde.");
-        
-        // Em produção, não exponha detalhes do erro
+
         if (isDevelopment()) {
             body.put("details", ex.getMessage());
         }

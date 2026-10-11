@@ -11,7 +11,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -25,12 +24,11 @@ public class EmailLoggingService {
     private String fromEmail;
     
     private final JavaMailSender mailSender;
-    private final MetricsService metricsService;
+
     
     @Autowired
-    public EmailLoggingService(JavaMailSender mailSender, MetricsService metricsService) {
+    public EmailLoggingService(JavaMailSender mailSender) {
         this.mailSender = mailSender;
-        this.metricsService = metricsService;
     }
     
     @Async
@@ -42,7 +40,6 @@ public class EmailLoggingService {
         );
         
         logger.info(logMessage);
-        metricsService.incrementEmailSent();
     }
     
     @Async
@@ -56,8 +53,7 @@ public class EmailLoggingService {
         );
         
         logger.error(logMessage, exception);
-        metricsService.incrementEmailError();
-        
+
         // Se for um erro de e-mail, podemos notificar os administradores
         if (exception instanceof MailException || exception instanceof MessagingException) {
             notifyAdminsAboutFailure(cliente, subject, errorMessage);
@@ -68,15 +64,17 @@ public class EmailLoggingService {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(fromEmail);
-            message.setTo("admin@example.com"); // Deveria vir de configuração
+            message.setTo("admin@example.com");
             message.setSubject("[ALERTA] Falha no envio de e-mail");
             
             String content = String.format(
-                "Falha ao enviar e-mail:\n" +
-                "Destinatário: %s\n" +
-                "Assunto: %s\n" +
-                "Erro: %s\n\n" +
-                "Data/Hora: %s",
+                    """
+                            Falha ao enviar e-mail:
+                            Destinatário: %s
+                            Assunto: %s
+                            Erro: %s
+                            
+                            Data/Hora: %s""",
                 cliente.getEmail(),
                 subject,
                 error,
@@ -99,7 +97,6 @@ public class EmailLoggingService {
         );
         
         logger.info(logMessage);
-        metricsService.incrementEmailOpened();
     }
     
     public void logLinkClicked(String trackingId, String recipient, String url) {
@@ -110,6 +107,5 @@ public class EmailLoggingService {
         );
         
         logger.info(logMessage);
-        metricsService.incrementEmailOpened();
     }
 }

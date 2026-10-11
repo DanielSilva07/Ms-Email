@@ -19,14 +19,9 @@ import org.thymeleaf.context.Context;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
-/**
- * Serviço responsável pelo envio assíncrono de e-mails com templates HTML.
- * Utiliza a anotação @Async para execução em uma thread separada.
- */
 @Service
 public class EmailService {
-    
-    private final MetricsService metricsService;
+
     private final RetryRegistry retryRegistry;
 
     private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
@@ -37,11 +32,9 @@ public class EmailService {
     private final TemplateEngine templateEngine;
 
     @Autowired
-    public EmailService(MetricsService metricsService, 
-                       RetryRegistry retryRegistry, 
+    public EmailService(RetryRegistry retryRegistry,
                        JavaMailSender emailSender, 
                        TemplateEngine templateEngine) {
-        this.metricsService = metricsService;
         this.retryRegistry = retryRegistry;
         this.emailSender = emailSender;
         this.templateEngine = templateEngine;
@@ -53,7 +46,6 @@ public class EmailService {
     public void sendEmailAsync(Cliente cliente) {
         if (cliente == null || cliente.getEmail() == null || cliente.getEmail().trim().isEmpty()) {
             logger.error("Falha ao enviar e-mail: Cliente ou e-mail inválido");
-            metricsService.incrementEmailError();
             throw new IllegalArgumentException("Cliente ou e-mail não pode ser nulo");
         }
 
@@ -61,50 +53,38 @@ public class EmailService {
             MimeMessage message = createMimeMessage(cliente);
             emailSender.send(message);
             logger.info("E-mail HTML enviado com sucesso para: {}", cliente.getEmail());
-            metricsService.incrementEmailSent();
         } catch (MailException | MessagingException ex) {
             logger.error("Erro ao enviar e-mail para {}: {}", cliente.getEmail(), ex.getMessage(), ex);
-            metricsService.incrementEmailError();
             throw new EmailException("Falha ao enviar e-mail: " + ex.getMessage(), ex);
         } catch (Exception ex) {
             logger.error("Erro inesperado ao enviar e-mail para {}: {}", cliente.getEmail(), ex.getMessage(), ex);
-            metricsService.incrementEmailError();
             throw new EmailException("Erro inesperado ao processar o envio de e-mail", ex);
         }
     }
 
-    /**
-     * Método de fallback para o envio de e-mails
-     */
     public void sendEmailFallback(Cliente cliente, Exception ex) {
         String errorMsg = String.format("Falha ao enviar e-mail após tentativas para %s: %s",
             cliente != null ? cliente.getEmail() : "null",
             ex.getMessage());
         logger.error(errorMsg);
-        metricsService.incrementEmailError();
-
     }
 
 
     private MimeMessage createMimeMessage(Cliente cliente) throws MessagingException {
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-        
-        // Configurações básicas da mensagem
+
         helper.setFrom(SENDER_EMAIL);
         helper.setTo(cliente.getEmail());
         helper.setSubject(cliente.getSubject() != null ?
                          cliente.getSubject() : "Seu IMC - Acompanhamento de Saúde");
-        
-        // Processa o template HTML
+
         String htmlContent = processTemplate(cliente);
         helper.setText(htmlContent, true); // true = isHTML
 
         try {
-            // Adiciona a imagem inline
             ClassPathResource resource = new ClassPathResource("static/Daniel_s_logo_2_.ico");
             if (resource.exists()) {
-                // O primeiro parâmetro deve corresponder ao cid: usado no template HTML
                 helper.addInline("Daniel_s_logo_2_.ico", resource, "image/x-icon");
                 logger.info("Logo adicionado com sucesso ao e-mail");
             } else {
@@ -115,16 +95,11 @@ public class EmailService {
         }
         return message;
     }
-    
-    /**
-     * Processa o template Thymeleaf com os dados do cliente.
-     */
+
     private String processTemplate(Cliente cliente) {
         Context context = new Context();
         context.setVariable("cliente", cliente);
         context.setVariable("currentYear", java.time.Year.now().getValue());
         return templateEngine.process(TEMPLATE_IMC_EMAIL, context);
     }
-    
-
 }

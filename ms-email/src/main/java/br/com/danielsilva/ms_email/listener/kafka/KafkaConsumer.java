@@ -84,11 +84,9 @@ public class KafkaConsumer {
         }
 
         try {
-            // Tenta remover possíveis aspas extras ou caracteres não visíveis
             String cleanMessage = message.trim();
             if (cleanMessage.startsWith("\"") && cleanMessage.endsWith("\"")) {
                 cleanMessage = cleanMessage.substring(1, cleanMessage.length() - 1);
-                // Substitui aspas escapadas
                 cleanMessage = cleanMessage.replace("\\\"", "\"");
             }
 

@@ -20,8 +20,5 @@ ENV SPRING_PROFILES_ACTIVE=prod \
     SPRING_MAIL_PASSWORD=${SMTP_PASS} \
     SPRING_KAFKA_BOOTSTRAP_SERVERS=localhost:9092
 
-# Expose the application port
-EXPOSE 8080
-
 # Set the entrypoint
 ENTRYPOINT ["java", "-jar", "app.jar"]
