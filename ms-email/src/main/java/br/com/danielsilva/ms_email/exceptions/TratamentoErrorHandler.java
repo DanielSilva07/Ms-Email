@@ -4,7 +4,7 @@ import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.amqp.rabbit.support.ListenerExecutionFailedException;
 import org.springframework.util.ErrorHandler;
 
-public class TratamentoErrorHandler implements ErrorHandler  {
+public class TratamentoErrorHandler implements ErrorHandler {
     @Override
     public void handleError(Throwable t) {
 

@@ -11,6 +11,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -19,39 +20,37 @@ public class EmailLoggingService {
 
     private static final Logger logger = LoggerFactory.getLogger(EmailLoggingService.class);
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    
+    private final JavaMailSender mailSender;
     @Value("${spring.mail.username}")
     private String fromEmail;
-    
-    private final JavaMailSender mailSender;
 
-    
+
     @Autowired
     public EmailLoggingService(JavaMailSender mailSender) {
         this.mailSender = mailSender;
     }
-    
+
     @Async
     public void logEmailSent(Cliente cliente, String subject, String content) {
         String timestamp = LocalDateTime.now().format(DATE_FORMAT);
         String logMessage = String.format(
-            "[%s] E-mail enviado para %s - Assunto: %s",
-            timestamp, cliente.getEmail(), subject
+                "[%s] E-mail enviado para %s - Assunto: %s",
+                timestamp, cliente.getEmail(), subject
         );
-        
+
         logger.info(logMessage);
     }
-    
+
     @Async
     public void logEmailError(Cliente cliente, String subject, Exception exception) {
         String timestamp = LocalDateTime.now().format(DATE_FORMAT);
         String errorMessage = exception.getMessage();
-        
+
         String logMessage = String.format(
-            "[%s] Falha ao enviar e-mail para %s - Assunto: %s - Erro: %s",
-            timestamp, cliente.getEmail(), subject, errorMessage
+                "[%s] Falha ao enviar e-mail para %s - Assunto: %s - Erro: %s",
+                timestamp, cliente.getEmail(), subject, errorMessage
         );
-        
+
         logger.error(logMessage, exception);
 
         // Se for um erro de e-mail, podemos notificar os administradores
@@ -59,14 +58,14 @@ public class EmailLoggingService {
             notifyAdminsAboutFailure(cliente, subject, errorMessage);
         }
     }
-    
+
     private void notifyAdminsAboutFailure(Cliente cliente, String subject, String error) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(fromEmail);
             message.setTo("admin@example.com");
             message.setSubject("[ALERTA] Falha no envio de e-mail");
-            
+
             String content = String.format(
                     """
                             Falha ao enviar e-mail:
@@ -75,12 +74,12 @@ public class EmailLoggingService {
                             Erro: %s
                             
                             Data/Hora: %s""",
-                cliente.getEmail(),
-                subject,
-                error,
-                LocalDateTime.now().format(DATE_FORMAT)
+                    cliente.getEmail(),
+                    subject,
+                    error,
+                    LocalDateTime.now().format(DATE_FORMAT)
             );
-            
+
             message.setText(content);
             mailSender.send(message);
             logger.info("Notificação de falha enviada para os administradores");
@@ -88,24 +87,24 @@ public class EmailLoggingService {
             logger.error("Falha ao enviar notificação de falha para os administradores: {}", e.getMessage(), e);
         }
     }
-    
+
     public void logEmailOpened(String trackingId, String recipient) {
         String timestamp = LocalDateTime.now().format(DATE_FORMAT);
         String logMessage = String.format(
-            "[%s] E-mail aberto - ID: %s - Destinatário: %s",
-            timestamp, trackingId, recipient
+                "[%s] E-mail aberto - ID: %s - Destinatário: %s",
+                timestamp, trackingId, recipient
         );
-        
+
         logger.info(logMessage);
     }
-    
+
     public void logLinkClicked(String trackingId, String recipient, String url) {
         String timestamp = LocalDateTime.now().format(DATE_FORMAT);
         String logMessage = String.format(
-            "[%s] Link clicado - ID: %s - Destinatário: %s - URL: %s",
-            timestamp, trackingId, recipient, url
+                "[%s] Link clicado - ID: %s - Destinatário: %s - URL: %s",
+                timestamp, trackingId, recipient, url
         );
-        
+
         logger.info(logMessage);
     }
 }

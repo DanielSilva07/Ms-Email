@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -19,7 +20,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         body.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
         body.put("error", "Falha no processamento de e-mail");
         body.put("message", ex.getMessage());
-        
+
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -30,7 +31,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         body.put("status", HttpStatus.BAD_REQUEST.value());
         body.put("error", "Requisição inválida");
         body.put("message", ex.getMessage());
-        
+
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
@@ -45,10 +46,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         if (isDevelopment()) {
             body.put("details", ex.getMessage());
         }
-        
+
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    
+
     private boolean isDevelopment() {
         String env = System.getenv("SPRING_PROFILES_ACTIVE");
         return env != null && (env.contains("dev") || env.contains("local"));

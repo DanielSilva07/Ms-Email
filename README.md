@@ -1,34 +1,35 @@
 # 📧 MS Email Service
 
-Microsserviço responsável pelo processamento assíncrono de mensagens Kafka e envio de e-mails com informações de clientes. Desenvolvido com Spring Boot, oferece alta disponibilidade, resiliência e monitoramento detalhado.
+Microsserviço responsável pelo processamento assíncrono de mensagens Kafka e envio de e-mails com informações de
+clientes. Desenvolvido com Spring Boot, oferece alta disponibilidade, resiliência e monitoramento detalhado.
 
 ## 🚀 Funcionalidades
 
 - **Consumo de Mensagens**
-  - Integração com Apache Kafka
-  - Processamento assíncrono de mensagens
-  - Suporte a múltiplos tópicos e partições
+    - Integração com Apache Kafka
+    - Processamento assíncrono de mensagens
+    - Suporte a múltiplos tópicos e partições
 
 - **Envio de E-mails**
-  - Configuração SMTP flexível
-  - Templates HTML personalizáveis com Thymeleaf
-  - Suporte a anexos e formatação rica
+    - Configuração SMTP flexível
+    - Templates HTML personalizáveis com Thymeleaf
+    - Suporte a anexos e formatação rica
 
 - **Resiliência**
-  - Retry com backoff exponencial
-  - Timeout configurável
-  - Fallbacks para falhas
+    - Retry com backoff exponencial
+    - Timeout configurável
+    - Fallbacks para falhas
 
 - **Monitoramento**
-  - Métricas detalhadas com Micrometer
-  - Integração com Prometheus e Grafana
-  - Health checks personalizados
-  - Logs estruturados
+    - Métricas detalhadas com Micrometer
+    - Integração com Prometheus e Grafana
+    - Health checks personalizados
+    - Logs estruturados
 
 - **Segurança**
-  - Autenticação SMTP segura
-  - Configuração sensível via variáveis de ambiente
-  - Proteção contra injeção de templates
+    - Autenticação SMTP segura
+    - Configuração sensível via variáveis de ambiente
+    - Proteção contra injeção de templates
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -44,7 +45,6 @@ Microsserviço responsável pelo processamento assíncrono de mensagens Kafka e 
 
 ![Mermaid Chart - Create complex, visual diagrams with text  A smarter way of creating diagrams -2025-07-01-154549](https://github.com/user-attachments/assets/fc207e36-0aa4-4c37-bfd9-546268bbdb54)
 
-
 ## 🚀 Começando
 
 ### 📋 Pré-requisitos
@@ -59,14 +59,13 @@ Microsserviço responsável pelo processamento assíncrono de mensagens Kafka e 
 
 ## ⚙️ Configuração
 
- **Acessar ferramentas**
-   - **Aplicação**: http://localhost:8080
-   - **Actuator**: http://localhost:8080/actuator
-   - **Prometheus**: http://localhost:9090
-   - **Grafana**: http://localhost:3000 (usuário: admin, senha: admin)
-   - **MailHog**: http://localhost:8025 (para visualizar e-mails em desenvolvimento)
+**Acessar ferramentas**
 
-
+- **Aplicação**: http://localhost:8080
+- **Actuator**: http://localhost:8080/actuator
+- **Prometheus**: http://localhost:9090
+- **Grafana**: http://localhost:3000 (usuário: admin, senha: admin)
+- **MailHog**: http://localhost:8025 (para visualizar e-mails em desenvolvimento)
 
 ## 📊 Monitoramento
 
@@ -74,18 +73,18 @@ A aplicação expõe métricas detalhadas através do Spring Boot Actuator e Pro
 
 ### Endpoints de Monitoramento
 
-| Endpoint                     | Descrição                                      |
-|------------------------------|-----------------------------------------------|
-| `GET /actuator/health`       | Status de saúde da aplicação                   |
-| `GET /actuator/metrics`      | Lista todas as métricas disponíveis            |
-| `GET /actuator/prometheus`   | Métricas no formato Prometheus                 |
-| `GET /actuator/info`         | Informações da aplicação                       |
-| `GET /api/metrics/health`    | Health check personalizado                     |
-
+| Endpoint                   | Descrição                           |
+|----------------------------|-------------------------------------|
+| `GET /actuator/health`     | Status de saúde da aplicação        |
+| `GET /actuator/metrics`    | Lista todas as métricas disponíveis |
+| `GET /actuator/prometheus` | Métricas no formato Prometheus      |
+| `GET /actuator/info`       | Informações da aplicação            |
+| `GET /api/metrics/health`  | Health check personalizado          |
 
 ## 🔄 Resiliência
 
-O serviço implementa padrões de resiliência usando Resilience4j para garantir operação estável mesmo em condições adversas.
+O serviço implementa padrões de resiliência usando Resilience4j para garantir operação estável mesmo em condições
+adversas.
 
 ### Circuit Breaker
 
@@ -121,7 +120,6 @@ resilience4j.retry:
       exponentialBackoffMultiplier: 2
 ```
 
-
 ## 📨 Formato da Mensagem
 
 O serviço consome mensagens no formato JSON do tópico Kafka configurado. O formato esperado é:
@@ -148,7 +146,6 @@ O serviço consome mensagens no formato JSON do tópico Kafka configurado. O for
 - **`listener/kafka/`**: Consumidores Kafka
 - **`service/`**: Lógica de negócios
 - **`resources/`**: Arquivos de configuração e templates
-
 
 ## 📄 Licença
 

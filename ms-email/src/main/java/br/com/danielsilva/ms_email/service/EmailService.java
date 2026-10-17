@@ -2,39 +2,37 @@ package br.com.danielsilva.ms_email.service;
 
 import br.com.danielsilva.ms_email.dto.Cliente;
 import br.com.danielsilva.ms_email.exceptions.EmailException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.github.resilience4j.retry.RetryRegistry;
+import io.github.resilience4j.retry.annotation.Retry;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
-import io.github.resilience4j.retry.annotation.Retry;
-import io.github.resilience4j.retry.RetryRegistry;
 import org.springframework.stereotype.Service;
-import org.springframework.core.io.ClassPathResource;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import org.springframework.beans.factory.annotation.Autowired;
 
 
 @Service
 public class EmailService {
 
-    private final RetryRegistry retryRegistry;
-
     private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
     private static final String SENDER_EMAIL = "danielcodelab2@gmail.com";
     private static final String TEMPLATE_IMC_EMAIL = "imc-email";
-    
+    private final RetryRegistry retryRegistry;
     private final JavaMailSender emailSender;
     private final TemplateEngine templateEngine;
 
     @Autowired
     public EmailService(RetryRegistry retryRegistry,
-                       JavaMailSender emailSender, 
-                       TemplateEngine templateEngine) {
+                        JavaMailSender emailSender,
+                        TemplateEngine templateEngine) {
         this.retryRegistry = retryRegistry;
         this.emailSender = emailSender;
         this.templateEngine = templateEngine;
@@ -44,6 +42,7 @@ public class EmailService {
     @Async
     @Retry(name = "emailService", fallbackMethod = "sendEmailFallback")
     public void sendEmailAsync(Cliente cliente) {
+        logger.info("Received message from IMC-APP");
         if (cliente == null || cliente.getEmail() == null || cliente.getEmail().trim().isEmpty()) {
             logger.error("Falha ao enviar e-mail: Cliente ou e-mail inválido");
             throw new IllegalArgumentException("Cliente ou e-mail não pode ser nulo");
@@ -64,8 +63,8 @@ public class EmailService {
 
     public void sendEmailFallback(Cliente cliente, Exception ex) {
         String errorMsg = String.format("Falha ao enviar e-mail após tentativas para %s: %s",
-            cliente != null ? cliente.getEmail() : "null",
-            ex.getMessage());
+                cliente != null ? cliente.getEmail() : "null",
+                ex.getMessage());
         logger.error(errorMsg);
     }
 
@@ -77,7 +76,7 @@ public class EmailService {
         helper.setFrom(SENDER_EMAIL);
         helper.setTo(cliente.getEmail());
         helper.setSubject(cliente.getSubject() != null ?
-                         cliente.getSubject() : "Seu IMC - Acompanhamento de Saúde");
+                cliente.getSubject() : "Seu IMC - Acompanhamento de Saúde");
 
         String htmlContent = processTemplate(cliente);
         helper.setText(htmlContent, true); // true = isHTML

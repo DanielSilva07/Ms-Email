@@ -12,14 +12,14 @@ import java.util.List;
 
 @Repository
 public interface EmailRetryRepository extends JpaRepository<EmailRetry, Long> {
-    
+
     List<EmailRetry> findByProcessedFalseAndNextRetryAtBefore(LocalDateTime now);
-    
+
     @Transactional
     @Modifying
     @Query("UPDATE EmailRetry e SET e.processed = true WHERE e.id = :id")
     void markAsProcessed(Long id);
-    
+
     @Transactional
     @Modifying
     @Query("UPDATE EmailRetry e SET e.lastError = :error, e.lastAttemptAt = :now WHERE e.id = :id")
